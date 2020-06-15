@@ -3,7 +3,7 @@ library(shinyWidgets)
 library(shinycssloaders)
 library(ggplot2)
 library(plotly)
-#library(swirlify)
+library(swirlify)
 library(swirl)
 
 
