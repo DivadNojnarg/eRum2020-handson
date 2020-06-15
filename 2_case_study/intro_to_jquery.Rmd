@@ -1,0 +1,126 @@
+---
+title: "Quick Introduction to jQuery"
+author: "David Granjon"
+date: "6/5/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## jQuery: exercise 1 (10 minutes)
+JSFiddle allows to insert HTML, CSS and JavaScript to test
+code, share and more. This is perfect for our purpose. It also does not require you to have any specific configuration on your machine so that you focus on testing!
+
+1. Go to [JSFiddle](https://jsfiddle.net/)
+2. Insert the following HTML code chunk in the HTML sub-window.
+
+```html
+<!DOCTYPE HTML>
+<html>
+  <head>
+  <!-- head content here -->
+  </head>
+  <body>
+  <p>Hello World</p>
+  </body>
+</html>
+```
+
+This is a very basic HTML skeleton
+
+3. In the JavaScript windows, select jQuery 3.4.1 in the dropdown menu (why 3.4.1? The latest Shiny release relies on that version). 
+4. Since it is best practice to run jQuery code only when the document is ready (avoiding to target non existing elements), we wrap our JS code in the following:
+
+```javascript
+$(function() {
+  // your code
+});
+
+// or a more explicit syntax
+$(document).ready(function() {
+  // code
+});
+```
+
+5. Now, let's try to change the color of the `<p>` tag. Hint: use the following pattern `$(selector).css('color', ...)` where you need to replace the selector by the good element and `...` by the color of your choice. The `css` method may also be apply to change other properties.
+6. Add it the `class = "awesome-text"` attribute. Hint: use the `$(selector).addClass(class)` pattern.
+7. Add it the `id = "text1"` attribute. Hint: to add an attribute, `$(selector).attr(name, value)` does the job.
+8. Note that all above steps may be chained as follows:
+
+```{js}
+$(selector)
+  .css("color", "your_color")
+  .addClass("...")
+  .attr("", "");
+```
+
+The last step is always followed by `;`. 
+
+## jQuery: exercice 2
+1. Clean up JSFiddle
+2. Insert the following HTML
+
+```html
+<!DOCTYPE HTML>
+<html>
+  <head>
+  <!-- head content here -->
+  </head>
+  <body>
+    <ul>
+      <li>Item 1</li>
+      <li>Item 2</li>
+      <li>Item 3</li>
+      <li>Item 4</li>
+      <li>Item 5</li>
+    </ul>
+  </body>
+</html>
+```
+
+3. Create an event listener to change the third item color as soon as one click on it.
+
+
+## Another example
+
+Below is another example of a button element with an attached event listener. Clicking on the button will increment its value by 1.
+Inside the event listener, `$(this)` refers to the button itself.
+
+```html
+<!DOCTYPE HTML>
+<html>
+  <head>
+  <!-- head content here -->
+  </head>
+  <body>
+    <button id="btn">click</button>
+  </body>
+</html>
+```
+
+
+```javascript
+$(function() {
+	
+  // recover the button inner html
+  const btnText = $("#btn").html();
+
+	// event listener for button element
+	$("#btn").click(function() {
+  	var val = $(this).data('val') || 0;
+    // (1) increment button 
+    // (2) add the button value to the inner text
+    $(this)
+      .data('val', val + 1)
+      .html(`${btnText}: ${val}`);
+    
+    // show alert given condition
+    if (val > 1) {
+    	alert("Hello World");
+    }
+  });
+  
+});
+```

@@ -1,0 +1,96 @@
+---
+title: "HTML dependencies"
+author: "David Granjon"
+date: "06/06/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(htmltools)
+library(shiny)
+```
+
+## Exercise 1: html dependencies (10 minutes)
+As shown earlier, Shiny is built on top of the Bootstrap 3 framework. We did check with the HTML inspector. `{htmltools}` has utils function to explore element dependencies like `findDependencies`. let's try on a simple `fluidPage` element.
+
+```{r}
+findDependencies(fluidPage())
+# Adding some icon.
+findDependencies(
+  fluidPage(
+    icon("trash")
+  )
+)
+```
+
+Adding an extra icon component brings another dependency!
+
+
+We would like to create a new Bootstrap 4 card component. The code is already provided.
+
+```{r}
+# we create the card function before
+my_card <- function(...) {
+  withTags(
+    div(
+      class = "card border-success mb-3",
+      div(class = "card-header bg-transparent border-success"),
+      div(
+        class = "card-body text-success",
+        h3(class = "card-title", "title"),
+        p(class = "card-text", ...)
+      ),
+      div(class = "card-footer bg-transparent border-success", "footer")
+    )
+  )
+}
+```
+
+
+1. This card does not render well, as you can see below:
+
+```{r}
+ui <- fluidPage(my_card("test"))
+server <- function(input, output, session) {}
+shinyApp(ui, server)
+```
+
+Try to explain why.
+
+2. Given that we may found the Bootstrap 4 CSS at https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css, create an HTML dependency containing this reference. You may start with the template below.
+
+```{r}
+card_deps <- htmlDependency(
+  name = "",
+  version = "",
+  src = c(href = ""),
+  stylesheet = ""
+)
+```
+
+3. Attach it to the card. Hint: apply the `tagList(tag, deps)` pattern.
+
+```{r}
+# we create the card function before
+my_card <- function(...) {
+  tag <- withTags(
+    div(
+      class = "card border-success mb-3",
+      div(class = "card-header bg-transparent border-success"),
+      div(
+        class = "card-body text-success",
+        h3(class = "card-title", "title"),
+        p(class = "card-text", ...)
+      ),
+      div(class = "card-footer bg-transparent border-success", "footer")
+    )
+  )
+  
+  # bind the dependency below. Complete the code
+  tagList()
+}
+```
+
+4 Create a Shiny app to check your work. Hint: typing `shinyapp` in the RStudio IDE triggers a snippet that automatically created a super simple shiny app skeleton. 
+

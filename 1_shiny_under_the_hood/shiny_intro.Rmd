@@ -1,0 +1,34 @@
+---
+title: "Shiny Intro"
+author: "David Granjon"
+date: "05/06/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(shiny)
+```
+
+## Exercise 1
+1. Run the following code:
+
+```{r}
+p("Hello World")
+```
+
+2. Copy and paste this code to the R console. What do you observe?
+
+
+## Exercise 2
+A convenient tool to inspect the code of any web page is the HTML inspector. We strongly recommand you to use either chrome or firefox tools. In chrome, the HTML inspector may be triggered:
+
+  - after a right click and selecting inspect
+  - after clicking on F12 (windows), fn + F12 on Mac
+  
+1. Run the app `runExample("01_hello")`.
+2. Click on "Open in Browser".
+3. Open the HTML inspector.
+4. Locate the `<head>` tag. Uncollapse it and search for the script containing `application/html-dependencies`.
+5. Try to delete the bootstrap.min.css and ion.rangeSlider.css.
+6. Conclusions.

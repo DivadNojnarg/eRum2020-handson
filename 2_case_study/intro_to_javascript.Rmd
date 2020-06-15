@@ -1,0 +1,41 @@
+---
+title: "intro_to_javascript"
+author: "David Granjon"
+date: "07/06/2020"
+output: js4shiny::html_document_js
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Examples below are powered by the [`{js4shiny}`](https://pkg.js4shiny.com/index.html) package by Garrick Aden-Buie! It allows to run JS code in an rmarkdown document without the need of Node.
+
+## Exercise 1: define variables (2 minutes)
+
+1. Play with the example below.
+
+```{js}
+let myNumber = 1; // affectation
+myNumber--; // decrement
+console.log(myNumber); // print 0
+```
+
+## Exercise 2: define objects (5 minutes)
+
+Below is an object skeleton.
+
+```{js}
+const me = {
+  name : ,
+  age : ,
+  music : ,
+  printName: function() {
+    console.log(`I am ${}`);
+  }
+}
+```
+
+1. Fill it with some random values.
+2. Access the name property.
+3. Create the printAge method, which returns the age. Hint: `this` refers to the object itself. For instance `this.name` gives the name property.

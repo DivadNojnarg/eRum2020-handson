@@ -1,0 +1,427 @@
+---
+title: "Tabler Dashboard Template"
+author: "David Granjon"
+date: "06/06/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(shiny)
+library(htmltools)
+library(OSUICode)
+library(testthat)
+library(jstools)
+library(here)
+```
+
+## Step 1: Import dependencies
+As shown earlier, a shiny app has CSS and JavaScript dependencies. Let's investigate what are the mandatory dependencies of Tabler. 
+
+1. Navigate to [tabler.io](https://preview-dev.tabler.io/layout-dark.html).
+2. Open the HTML inspector and review all the HTML dependencies. What are the mandatory ones?
+3. Create a code to bundle each of those dependencies, applying your recent {htmltools} knowldege.
+4. Run `findDependencies(div())` in the R console. What do you observe?
+5. Attach all the tabler dependencies to the previous empty `div()`. What do you observe?
+6. Wrap the previous example in a basic shiny app. Open the HTML inspector and conclude.
+
+You may use the following skeleton:
+
+```{r}
+ui <- fluidPage(
+  # your code here
+)
+
+# leave server empty
+server <- function(input, output, session) {}
+shinyApp(ui, server)
+```
+
+In practice it is recommended to add the main dependencies to a template element that is always here, like the HTML page body tag. 
+
+## Step 2: Template skeleton
+Now that our dependency system is set up, it's time to build template elements, that is the navigation bar, the header, the body and the footer. The workshop duration is too short to build those functions from scratch. Fortunately, the {OSUIcode} (for Outsanding User Interfaces for Shiny) contains all those elements. Let's look at the main page code. I acknowledge, what you'll see below is rather frightening.
+
+```{r}
+tabler_page <- function(..., dark = TRUE, title = NULL, favicon = NULL){
+  
+  # head
+  head_tag <- tags$head(
+    tags$meta(charset = "utf-8"),
+    tags$meta(
+      name = "viewport", 
+      content = "
+        width=device-width, 
+        initial-scale=1, 
+        viewport-fit=cover"
+    ),
+    tags$meta(`http-equiv` = "X-UA-Compatible", content = "ie=edge"),
+    tags$title(title),
+    tags$link(
+      rel = "preconnect", 
+      href = "https://fonts.gstatic.com/", 
+      crossorigin = NA
+    ),
+    tags$meta(name = "msapplication-TileColor", content = "#206bc4"),
+    tags$meta(name = "theme-color", content = "#206bc4"),
+    tags$meta(name = "apple-mobile-web-app-status-bar-style", content = "black-translucent"),
+    tags$meta(name = "apple-mobile-web-app-capable", content = "yes"),
+    tags$meta(name = "mobile-web-app-capable", content = "yes"),
+    tags$meta(name = "HandheldFriendly", content = "True"),
+    tags$meta(name = "MobileOptimized", content = "320"),
+    tags$meta(name = "robots", content = "noindex,nofollow,noarchive"),
+    tags$link(rel = "icon", href = favicon, type = "image/x-icon"),
+    tags$link(rel = "shortcut icon", href = favicon, type="image/x-icon")
+  )
+  
+  # body
+  body_tag <- tags$body(
+    tags$div(
+      class = paste0("antialiased ", if(dark) "theme-dark"),
+      style = "display: block;",
+      tags$div(class = "page", ...)
+    )
+  ) %>% add_tabler_deps()
+  
+  tagList(head_tag, body_tag)
+}
+```
+
+Therefore, I suggest to start simpler! We will do this exercise step by step together.
+
+1. Navigate to [tabler.io](https://preview-dev.tabler.io/layout-dark.html).
+2. Open the HTML inspector and identify the `content` element.
+3. The next step consists in removing all placeholder elements, ie elements not part of the skeleton. For instance,
+the tabler demo dashboard has cards in the content that are not mandatory and could be removed in the HTML inspector (press the return arrow after selecting the tag).
+4. Copy the HTML code (click right on the tag and copy element) and paste it in the [html2r](https://github.com/alandipert/html2r) shiny app. This translator significantly speeds up the conversion process. 
+5. Create the `tabler_body` function with the good set of parameters. Hint: the footer element will be implemented separately, so we simply create the corresponding parameter to `tabler_body`.
+
+```{r}
+tabler_body <- function() {
+  # your code
+}
+```
+
+6. Test it below:
+
+```{r}
+ui <- tabler_page(
+  # your code here
+)
+server <- function(input, output) {}
+shinyApp(ui, server)
+```
+
+This is not really impressive but still a good start.
+
+
+## Step 3: adding inputs elements!
+Inputs is crucial in a web application since it will allow the user to interact and explore. Action buttons are probably one of the most famous input. 
+
+1. Run the following app:
+
+```{r}
+ui <- fluidPage(
+  tags$style("body {background-color: black}"),
+  actionButton("test", "Click me!")
+)
+
+server <- function(input, output, session) {
+  observeEvent(input$test, {
+    showNotification("Congrats", type = "warning")
+  })
+}
+
+shinyApp(ui, server)
+```
+
+Notice the notifications that pops up as soon as the action button is clicked.
+
+1. Inspect the `shiny::actionButton code`. Hint: you may do `trace(actionButton, edit = TRUE)`. Notice the `action-button` class.
+2. Below is a custom shiny action button where we deliberately removed the `action-button` class.
+
+```{r}
+customActionButton <- function (inputId, label, icon = NULL, width = NULL, ...)  {
+  value <- restoreInput(id = inputId, default = NULL)
+  tags$button(
+    id = inputId, 
+    style = if (!is.null(width)) paste0("width: ", validateCssUnit(width), ";"), 
+    type = "button", 
+    class = "btn btn-default", 
+    `data-val` = value, 
+    list(shiny:::validateIcon(icon), label), ...
+  )
+}
+
+ui <- fluidPage(
+  tags$style("body {background-color: black}"),
+  customActionButton("test", "Click me!")
+)
+
+server <- function(input, output, session) {
+  observeEvent(input$test, {
+    showNotification("Congrats", type = "warning")
+  })
+}
+
+shinyApp(ui, server)
+
+```
+
+Why is the notification not visible? 
+
+3. If you remember, the first step of an input binding consists in finding the input HTML element in the DOM. Below is the `actionButton` input binding find method.
+
+```javascript
+find: function(scope) {
+  return $(scope).find(".action-button");
+}
+```
+
+Conclusions?
+
+Consider the code for the `tabler_button`:
+
+```{r}
+tabler_button <- function(inputId, label, status = NULL, icon = NULL, width = NULL, ...) {
+  
+  btn_cl <- paste0(
+    "btn action-button",
+    if (is.null(status)) {
+      " btn-primary"
+    } else {
+      paste0(" btn-", status)
+    }
+  )
+  
+  value <- restoreInput(id = inputId, default = NULL)
+  
+  # custom right margin
+  if (!is.null(icon)) icon$attribs$class <- paste0(
+    icon$attribs$class, " mr-1"
+  )
+  
+  tags$button(
+    id = inputId, 
+    style = if (!is.null(width)) paste0("width: ", validateCssUnit(width), ";"), 
+    type = "button", 
+    class = btn_cl, 
+    `data-val` = value, 
+    list(icon, label), ...
+  )
+}
+```
+
+
+In theory all buttons having the class `action-button` may inherit from the related shiny input binding. This is convenient since no coding is required on the JavaScript side!
+
+```{r}
+ui <- tabler_page(
+  tabler_body(
+    tabler_button("test", "Click me!") 
+  )
+)
+
+server <- function(input, output, session) {
+  observeEvent(input$test, {
+    showNotification("Congrats", type = "warning")
+  })
+}
+
+shinyApp(ui, server)
+```
+
+4. Now, for the learning purpose, we decide to re-create the button JS code, located in `js/tabler_btn_binding.js`. 
+
+5. Modify the `tabler_button` so that it is not recognized by the shiny action button input binding. Hint: this in explained in the previous part.
+
+6. Using your `{htmltools}` super powers, create an HTML dependency pointing to the new input binding. `addResourcePath` allows to make a JS folder visible to the shiny server. Edit the code below.
+
+```{r}
+addResourcePath("deps", here("2_case_study/js"))
+tabler_btn_deps <- htmlDependency(
+  name = "",
+  version = "",
+  src = c(href = "deps"), # don't change.
+  script = ""
+)
+```
+
+7. Attach it to the `tabler_button` (last line).
+
+```{r}
+tabler_button <- function(inputId, label, status = NULL, icon = NULL, width = NULL, ...) {
+  
+  # modify the class so that the classic shiny action button input binding does not recognize our tabler_button
+  btn_cl <- paste0(
+    "btn action-button",
+    if (is.null(status)) {
+      " btn-primary"
+    } else {
+      paste0(" btn-", status)
+    }
+  )
+  
+  value <- restoreInput(id = inputId, default = NULL)
+  
+  # custom right margin
+  if (!is.null(icon)) icon$attribs$class <- paste0(
+    icon$attribs$class, " mr-1"
+  )
+  
+  btnTag <- tags$button(
+    id = inputId, 
+    style = if (!is.null(width)) paste0("width: ", validateCssUnit(width), ";"), 
+    type = "button", 
+    class = btn_cl, 
+    `data-val` = value, 
+    list(icon, label), ...
+  )
+  
+  # add dependencies here
+  tagList(btnTag, ...)
+}
+```
+
+8. Run the following code check that the button does not work. This is not a surprise!
+
+```{r}
+ui <- fluidPage(
+  tabler_button("test", "Test"),
+  verbatimTextOutput("val")
+)
+
+server <- function(input, output, session) {
+  output$val <- renderPrint(input$test)
+}
+
+shinyApp(ui, server)
+```
+
+9. This is time to start the input binding. Open the `js/tabler_btn_binding.js` file and try to implement the `find` method. Hint: `scope` refers to the document. In jQuery, we use `find` to find all descendants of the selector, matching the condition. For instance `$(document).find(".titi")` will find all elements having the class `titi`. If you apply `find` on a child element, it won't be able to find items in the parents.
+
+10. Implement the input binding `getValue` method. Hint: `$(selector).data("val");` allows to get the `data-value` attribute of an value an element.
+
+11. Test the updated `tabler_button` in a shiny app. What happens? Why?
+
+12. The `subscribe` methods gives instruction to Shiny on when to update the current input value. This is a good place for an event listener! Implement `subscribe` and check if the button works as expected.
+
+13. Let's go further and try to update the action button. We would like to be able to reset the action button value to 0. We need 2 elements:
+
+  - send informations from R to JS with the `session$sendInputMessage` method.
+  - receive an treat information in the client (JS) with `reveiveMessage` and `setValue`. Interestingly, since the input binding is an object, you may create any method. Therefore, instead of using `setValue`, you may define `reset`.
+
+```{r}
+reset_tabler_button <- function(inputId, session = getDefaultReactiveDomain()) {
+  session$sendInputMessage(inputId, message = list(reset = TRUE))
+}
+```
+
+
+Congrats, you've just created your first input binding!
+
+
+## Step 4: Test and validate (15 min)
+Input validation is a crucial step toward success. Briefly, it consists in checking user inputs so that your functions fail safely and elegantly by providing meaningful error messages or warnings. This concept has already been covered in R for Data Science, Advanced R and a lot of other resources. Hence, I am not trying to reinvent the wheel and we will rely on already existing patterns, whose effectiveness is no longer to be demonstrated. Welcome to the defensive programming world.
+
+### Test the R logic 
+We consider the `tabler_card` function:
+
+```{r}
+tabler_card <- function(..., title = NULL, status = NULL, width = 6, stacked = FALSE, padding = NULL) {
+  
+  card_cl <- paste0(
+    "card", 
+    if (stacked) " card-stacked",
+    if (!is.null(padding)) paste0(" card-", padding)
+  )
+  
+  div(
+    class = paste0("col-md-", width),
+    div(
+      class = card_cl,
+      if (!is.null(status)) {
+        div(class = paste0("card-status-top bg-", status))
+      },
+      div(
+        class = "card-body",
+        # we could have a smaller title like h4 or h5...
+        if (!is.null(title)) {
+          h3(class = "card-title", title)
+        },
+        ...
+      )
+    )
+  )
+  
+}
+```
+
+We also know that:
+
+  - The Bootstrap 4 grid ranges between 1 and 12. `width = 12` means that the card will take the full horizontal space.
+  - The Bootstrap 4 valid statuses are "danger", "success", "warning", "info", "primary", "secondary", "light", "dark"
+
+1. Look at the current function and list what could go wrong with end-users? 
+2. Write validation functions to handle those issues? Hint: start to create the `validate_card_width` function.
+3. Using `testthat`, write 3 units test to check if those security functions work as expected. Hint: as a reminder, below is a testthat pattern:
+
+```{r}
+test_that("Write the context", {
+  expect_error(
+    # your code ...
+  )
+  # other tests
+})
+```
+
+Below arare optional questions (only if times allows).
+
+4. The `{OSUIcode}` package contains validations function taken from various packages like `{shinydashboard}`. What is the goal of `tagMatches`? What is the role of `tagAssert`?
+5. Use one of the above function to add additional tests to the `tabler_card`.
+
+
+### Test the JavaScript logic (Optional: Only if time allows)
+Until now, we only validated the R code. Yet, a lot of template elements have an associated JavaScript part controlling their behavior. We should also control the quality of that code. 
+
+In the following, we will introduce the `{jstools}` package developed by [dreamRs](https://github.com/dreamRs/jstools), which provides a R wrapper for various JavaScript tools like [JSHint](https://jshint.com/). You could also directly use JSHint.
+
+6. The js folder of this project contains a custom input binding. This is this code which drives the tabler navigation menu. Run the following code. 
+
+```{r}
+bindings <- list.files(
+  path = here("2_case_study/js"),
+  recursive = TRUE,
+  full.names = TRUE
+)
+jshint_file(input = bindings, options = jshint_options(esversion = 6, jquery = TRUE, globals = list("Shiny", "app")))
+```
+
+7. Try to fix all errors.
+
+
+## Step 5: enhance interactivity
+Toasts are key elements for provide user feedback. The most basic toast HTML skeleton is defined below.
+
+```html
+<div class="toast">
+  <div class="toast-header">
+    Toast Header
+  </div>
+  <div class="toast-body">
+    Some text inside the toast body
+  </div>
+</div>
+```
+
+1. Using a method of your choice, convert this HTML code to an R function.
+2. Complete the `show_toast` function by using `session$sendCustomMessage` to send the message from R to JS.
+
+```{r}
+show_toast <- function(id, options = NULL, session = getDefaultReactiveDomain()) {
+  # R code
+}
+```
+
+3. The toast JS handler skeleton is already created. Complete the code so that the toast is initialized and shown. Hint: use `$(selector).toast(options)` to create the toast and `$(selector).toast('show')` to display it.
+4. Test your new component in a shiny app!
