@@ -81,13 +81,6 @@
       "Repository": "RSPM",
       "Hash": "e652f23d8b1807cc975c51410d05b72f"
     },
-    "V8": {
-      "Package": "V8",
-      "Version": "3.1.0",
-      "Source": "Repository",
-      "Repository": "RSPM",
-      "Hash": "e4a46d2f34fe0de3a88d5aaf79d81a17"
-    },
     "askpass": {
       "Package": "askpass",
       "Version": "1.1",
@@ -400,18 +393,6 @@
       "Source": "Repository",
       "Repository": "RSPM",
       "Hash": "84b0ee361e2f78d6b7d670db9471c0c5"
-    },
-    "jstools": {
-      "Package": "jstools",
-      "Version": "0.1.0",
-      "Source": "GitHub",
-      "RemoteType": "github",
-      "RemoteHost": "api.github.com",
-      "RemoteRepo": "jstools",
-      "RemoteUsername": "dreamRs",
-      "RemoteRef": "master",
-      "RemoteSha": "94348dee7131c279eca3dfdc45719e3eb6000c26",
-      "Hash": "c1823521936daa769ad0223e99c2768e"
     },
     "knitr": {
       "Package": "knitr",
