@@ -177,6 +177,7 @@ shinyApp(ui, server)
 Notice the notifications that pops up as soon as the action button is clicked.
 
 1. Inspect the `shiny::actionButton code`. Hint: you may do `trace(actionButton, edit = TRUE)`. Notice the `action-button` class.
+
 2. Below is a custom shiny action button where we deliberately removed the `action-button` class.
 
 ```{r}
@@ -274,7 +275,7 @@ shinyApp(ui, server)
 
 5. Modify the `tabler_button` so that it is not recognized by the shiny action button input binding. Hint: this in explained in the previous part.
 
-6. Using your `{htmltools}` super powers, create an HTML dependency pointing to the new input binding. `addResourcePath` allows to make a JS folder visible to the shiny server. Edit the code below.
+6. Using your `{htmltools}` super powers, create an HTML dependency pointing to the new input binding. Note: `addResourcePath` allows to make a the JS folder visible to the shiny server and significantly simplify the path. Edit the code below.
 
 ```{r}
 addResourcePath("deps", here("2_case_study/js"))
@@ -286,7 +287,7 @@ tabler_btn_deps <- htmlDependency(
 )
 ```
 
-7. Attach it to the `tabler_button` (last line).
+7. Attach it to the `tabler_button` (see last line).
 
 ```{r}
 tabler_button <- function(inputId, label, status = NULL, icon = NULL, width = NULL, ...) {
@@ -343,17 +344,70 @@ shinyApp(ui, server)
 
 11. Test the updated `tabler_button` in a shiny app. What happens? Why?
 
-12. The `subscribe` methods gives instruction to Shiny on when to update the current input value. This is a good place for an event listener! Implement `subscribe` and check if the button works as expected.
+```{r}
+ui <- fluidPage(
+  # your code
+  tabler_button(inputId = "btn", "Click")
+)
 
-13. Let's go further and try to update the action button. We would like to be able to reset the action button value to 0. We need 2 elements:
+server <- function(input, output, session) {
+  observe(print(input$btn))
+}
+
+shinyApp(ui, server)
+```
+
+12. The `subscribe` method gives instruction to Shiny on when to update the current input value. This is a good place for an event listener! Implement `subscribe` and check if the button works as expected. Hint: as a reminder an event listener is created with the following pattern.
+
+```javascript
+$("selector").on("event_name", function(e) {
+  // your logic
+});
+```
+
+```{r}
+ui <- fluidPage(
+  # your code
+  tabler_button(inputId = "btn", "Click")
+)
+
+server <- function(input, output, session) {
+  observe(print(input$btn))
+}
+
+shinyApp(ui, server)
+```
+
+13. Let's go further and try to update the action button. By default, an action button alway increment and we would like to be able to reset the action button value to 0. We need 2 elements:
 
   - send informations from R to JS with the `session$sendInputMessage` method.
-  - receive an treat information in the client (JS) with `reveiveMessage` and `setValue`. Interestingly, since the input binding is an object, you may create any method. Therefore, instead of using `setValue`, you may define `reset`.
+  - receive an treat information in the client (JS) with `reveiveMessage` and `setValue`. Interestingly, since the input binding is an object, you may create any other method. Therefore, instead of using `setValue`, you may define `reset` and call it in `reveiveMessage`.
+  
+Under the hood, the R/JS communication relies on the [websocket](https://divadnojnarg.github.io/outstanding-shiny-ui/shiny-intro.html) technology.
 
 ```{r}
 reset_tabler_button <- function(inputId, session = getDefaultReactiveDomain()) {
   session$sendInputMessage(inputId, message = list(reset = TRUE))
 }
+```
+
+Let's test our update button feature.
+
+```{r}
+ui <- fluidPage(
+  # your code
+  tabler_button(inputId = "btn", "Click"),
+  tabler_button(inputId = "reset", "reset")
+)
+
+server <- function(input, output, session) {
+  observe(print(input$btn))
+  observeEvent(input$reset, {
+    reset_tabler_button(id = "btn")
+  })
+}
+
+shinyApp(ui, server)
 ```
 
 
