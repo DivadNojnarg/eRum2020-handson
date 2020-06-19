@@ -18,7 +18,9 @@ library(here)
 As shown earlier, a shiny app has CSS and JavaScript dependencies. Let's investigate what are the mandatory dependencies of Tabler. 
 
 1. Navigate to [tabler.io](https://preview-dev.tabler.io/layout-dark.html).
+
 2. Open the HTML inspector and review all the HTML dependencies. What are the mandatory ones?
+
 3. Create a code to bundle each of those dependencies, applying your recent {htmltools} knowldege. Tabler dependencies may be accessed in a CDN (content delivery network) to avoid storing local files. See [here](https://www.jsdelivr.com/package/npm/tabler) for Tabler and [here](https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/) for Bootstrap 4 JavaScript resources.
 
 As a starting point, we consider the tabler dependency below.
@@ -42,6 +44,7 @@ bootstrap_deps <- htmlDependency(
 
 
 4. Run `findDependencies(div())` in the R console. What do you observe?
+
 5. Attach all the tabler dependencies to the previous empty `div()`. What do you observe?
 
 ```{r}
@@ -118,8 +121,18 @@ Therefore, I suggest to start simpler! We will do this exercise step by step tog
 1. Navigate to [tabler.io](https://preview-dev.tabler.io/layout-dark.html).
 2. Open the HTML inspector and identify the `content` element.
 3. The next step consists in removing all placeholder elements, ie elements not part of the skeleton. For instance,
-the tabler demo dashboard has cards in the content that are not mandatory and could be removed in the HTML inspector (press the return arrow after selecting the tag).
+the tabler demo dashboard has cards in the content that are not mandatory and could be removed in the HTML inspector (press the return arrow after selecting the tag). Best practice is also to remove HTML comments like `<!-- Comment -->` since it is not well handle by the converter.
+
+The html code may be found below.
+
+```html
+<div class="content">
+  <div class="container-xl"></div>
+</div>
+```
+
 4. Copy the HTML code (click right on the tag and copy element) and paste it in the [html2r](https://github.com/alandipert/html2r) shiny app. This translator significantly speeds up the conversion process. 
+
 5. Create the `tabler_body` function with the good set of parameters. Hint: the footer element will be implemented separately, so we simply create the corresponding parameter to `tabler_body`.
 
 ```{r}
