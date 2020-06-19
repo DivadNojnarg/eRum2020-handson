@@ -20,8 +20,35 @@ As shown earlier, a shiny app has CSS and JavaScript dependencies. Let's investi
 1. Navigate to [tabler.io](https://preview-dev.tabler.io/layout-dark.html).
 2. Open the HTML inspector and review all the HTML dependencies. What are the mandatory ones?
 3. Create a code to bundle each of those dependencies, applying your recent {htmltools} knowldege. Tabler dependencies may be accessed in a CDN (content delivery network) to avoid storing local files. See [here](https://www.jsdelivr.com/package/npm/tabler) for Tabler and [here](https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/) for Bootstrap 4 JavaScript resources.
+
+As a starting point, we consider the tabler dependency below.
+
+```{r}
+tabler_deps <- htmlDependency(
+  name = "Tabler",
+  version = "1.0.7",
+  src = c(href = "https://cdn.jsdelivr.net/npm/tabler@1.0.0-alpha.7/dist/"),
+  script = "js/tabler.min.js",
+  stylesheet = "css/tabler.css.js"
+)
+
+# complete the code below and run the whole code chunk
+bootstrap_deps <- htmlDependency(
+  name = "",
+  version = "",
+  src = c(href = "")
+)
+```
+
+
 4. Run `findDependencies(div())` in the R console. What do you observe?
 5. Attach all the tabler dependencies to the previous empty `div()`. What do you observe?
+
+```{r}
+# complete the code below and run
+tagList(div(), ...)
+```
+
 6. Wrap the previous example in a basic shiny app. Open the HTML inspector and conclude.
 
 You may use the following skeleton:
