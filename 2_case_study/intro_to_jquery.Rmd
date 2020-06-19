@@ -23,7 +23,13 @@ code, share and more. This is perfect for our purpose. It also does not require 
   <!-- head content here -->
   </head>
   <body>
-  <p>Hello World</p>
+    <ul>
+      <li>Item 1</li>
+      <li>Item 2</li>
+      <li>Item 3</li>
+      <li>Item 4</li>
+      <li>Item 5</li>
+    </ul>
   </body>
 </html>
 ```
@@ -44,46 +50,18 @@ $(document).ready(function() {
 });
 ```
 
-5. Now, let's try to change the color of the `<p>` tag. Hint: use the following pattern `$(selector).css('color', ...)` where you need to replace the selector by the good element and `...` by the color of your choice. The `css` method may also be apply to change other properties.
-6. Add it the `class = "awesome-text"` attribute. Hint: use the `$(selector).addClass(class)` pattern.
-7. Add it the `id = "text1"` attribute. Hint: to add an attribute, `$(selector).attr(name, value)` does the job.
-8. Note that all above steps may be chained as follows:
+5. Create an event listener to change the third item color as soon as one click on it. 
+Hint 1: To select the a specific item you may use `$(selector:eq(i))` where i is the index of the element. Keep in mind that JavaScript starts from 0 and not 1 like R!
+Hint 2: as a reminder, to create an event listener in jQuery, we use the following pattern.
 
-```{js}
-$(selector)
-  .css("color", "your_color")
-  .addClass("...")
-  .attr("", "");
+```javascript
+$("selector").on("event_name", function(e) {
+  // your logic
+});
 ```
 
-The last step is always followed by `;`. 
 
-## jQuery: exercice 2
-1. Clean up JSFiddle
-2. Insert the following HTML
-
-```html
-<!DOCTYPE HTML>
-<html>
-  <head>
-  <!-- head content here -->
-  </head>
-  <body>
-    <ul>
-      <li>Item 1</li>
-      <li>Item 2</li>
-      <li>Item 3</li>
-      <li>Item 4</li>
-      <li>Item 5</li>
-    </ul>
-  </body>
-</html>
-```
-
-3. Create an event listener to change the third item color as soon as one click on it.
-
-
-## Another example
+## Another example 
 
 Below is another example of a button element with an attached event listener. Clicking on the button will increment its value by 1.
 Inside the event listener, `$(this)` refers to the button itself.
