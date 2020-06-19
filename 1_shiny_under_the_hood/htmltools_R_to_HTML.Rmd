@@ -26,12 +26,9 @@ myTag <- a(
 myTag
 ```
 
-1. Access its class using `tagGetAttribute` and another method of your choice.
-2. Inspect its structure. Hint: you may use `str`.
-3. Find its name.
-4. Access the first child.
-5. Modify the first child class to `custom class`.
-6. Add an id attribute to the second child.
+1. Inspect its structure. Hint: you may use `str`.
+2. Access its class using `tagGetAttribute` and another method of your choice.
+3. Modify the first child class to `custom class`.
 
 ## Exercise 2: modifiying tags (5 minutes)
 Let us consider the following tag:
