@@ -56,6 +56,42 @@ server <- function(input, output, session) {
 
 shinyApp(ui, server)
 
+# {tm} starts here ....
+# tidymodules::add_module("counter",path = "./3_tidymodules/")
+
+source("./3_tidymodules/tm_Counter.R")
+
+# The app with {tm}
+
+my_counter <- Counter$new()
+
+ui <- fluidPage(
+  actionButton("reset", label = "Reset counter"),
+  br(),
+  my_counter$ui("Counter #1"),
+  verbatimTextOutput("addition")
+)
+
+server <- function(input, output, session) {
+  
+  callModules()
+  
+  reset <- reactive(input$reset)
+
+  defineEdges({
+    
+    reset %>1% my_counter
+    
+  })
+  
+  output$addition <- renderText({
+    paste0("counter + 2 = ",my_counter$execOutput("counter")+2)
+  })
+  
+}
+
+
+
 
 ## A. Do the short swirl lesson first
 ## B. Copy the counter module example, adjust and convert it to {tm}
