@@ -1,0 +1,60 @@
+- Class: meta
+  Course: Intro to tidymodules
+  Lesson: R6 & OOP
+  Author: Mustapha Larbaoui
+  Type: Standard
+  Organization: Novartis AG
+  Version: 2.4.5
+
+- Class: text
+  Output: The R6 package provides an implementation of encapsulated object-oriented programming (OOP) for R.
+
+- Class: text
+  Output: R6 classes are similar to R’s reference classes, but are lighter weight, and avoid some issues that come along with using S4 (R’s reference classes are based on S4). 
+    For more information about speed and memory footprint, see the Performance article (https://r6.r-lib.org/articles/Performance.html).
+
+- Class: text
+  Output: Unlike many objects in R, instances (objects) of R6 classes have reference semantics.
+
+- Class: cmd_question
+  Output: Print on the console the Person R6 Class.
+  CorrectAnswer: Person
+  AnswerTests: omnitest(correctExpr='Person')
+  Hint: The Person class is already loaded, type ls() to see it.
+
+- Class: text
+  Output: You have just printed the Class definition as show on the slide. There are two fields and three methods defined. 
+    Note that the clone function is provided by R6.
+
+- Class: cmd_question
+  Output: Create a person with black hair named Steve and save the reference of the person in a variable p.
+  CorrectAnswer: p <- Person$new(name = "Steve",hair = "black")
+  AnswerTests: expr_creates_var('p');any_of_exprs('p <- Person$new(name = "Steve",hair = "black")','p <- Person$new("Steve","black")')
+  Hint: Use Person$new(...) to create a new person and don't forget to assign it to p.
+
+- Class: cmd_question
+  Output: Print the p object on the console and notice the difference with the Class Person.
+  CorrectAnswer: p
+  AnswerTests: omnitest(correctExpr='p')
+  Hint: Just type p....
+
+- Class: cmd_question
+  Output: Now make Steve's hair orange.
+  CorrectAnswer: p$set_hair("orange")
+  AnswerTests: omnitest(correctExpr='p$set_hair("orange")')
+  Hint: Use the set_hair method. Note that code completion is available, just type p$....
+
+- Class: text
+  Output: It is now time for {tidymodules}...
+  
+- Class: text
+  Output: tidymodules or tm in short uses R6 Classes...
+
+- Class: cmd_question
+  Output: Print on the console the parent Class of all {tm} modules
+  CorrectAnswer: TidyModule
+  AnswerTests: omnitest(correctExpr='TidyModule')
+  Hint: It has the same name as the package
+
+- Class: text
+  Output: That's a big Class with a lot of cool things! Now let's make a counter with {tm}... 

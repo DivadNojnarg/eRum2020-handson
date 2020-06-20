@@ -765,7 +765,7 @@
     },
     "tidymodules": {
       "Package": "tidymodules",
-      "Version": "0.1.0.9008",
+      "Version": "0.1.0.9012",
       "Source": "GitHub",
       "Remotes": "dgrtwo/snippr@29c1813",
       "RemoteType": "github",
@@ -773,8 +773,8 @@
       "RemoteRepo": "tidymodules",
       "RemoteUsername": "Novartis",
       "RemoteRef": "master",
-      "RemoteSha": "58f433b702e31f00b017129b234545140e6aa833",
-      "Hash": "dda2e811d06a1fb002de91ec5a6a1fd6"
+      "RemoteSha": "8b980cbed4925714aafa79a4f20d3c14ebd06c3d",
+      "Hash": "aa41cfe8700bde13a434cb97936709a5"
     },
     "tidyr": {
       "Package": "tidyr",
