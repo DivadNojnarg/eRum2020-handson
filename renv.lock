@@ -773,8 +773,15 @@
       "RemoteRepo": "tidymodules",
       "RemoteUsername": "Novartis",
       "RemoteRef": "master",
-      "RemoteSha": "2cc381b599e09c3e6da877724a8a92ba3cf5181e",
-      "Hash": "3fe1f2c2245d1843d74b9db004a19963"
+      "RemoteSha": "ac434da4585d243ab8da8b64345e94414c540272",
+      "Hash": "aaae1fd8f30c43a5623014793bf3da4b"
+    },
+    "miniUI": {
+      "Package": "miniUI",
+      "Version": "0.1.1.1",
+      "Source": "Repository",
+      "Repository": "RSPM",
+      "Hash": "fec5f52652d60615fdb3957b3d74324a"
     },
     "tidyr": {
       "Package": "tidyr",
